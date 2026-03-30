@@ -37,3 +37,7 @@ app.get('/tasks', async (req, res) => {
         res.status(500).send(err);
     }
 })
+
+app.listen(PORT, () => {
+    console.log(`Servidor a correr na porta ${PORT}`);
+});
