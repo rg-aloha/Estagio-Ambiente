@@ -1,0 +1,8 @@
+- backend server.js original
+const express = require('express'); 
+const bodyParser = require('body-parser'); 
+const mariadb = require('mariadb'); 
+const app = express(); const PORT = 3000;
+
+app.use(bodyParser.json());
+
