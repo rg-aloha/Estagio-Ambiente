@@ -6,7 +6,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>Bem-vindo à minha App</h1>
+        <h1>?</h1>
         <TaskList /> {/* Mostrar a lista de tarefas */}
       </header>
     </div>
