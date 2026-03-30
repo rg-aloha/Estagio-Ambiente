@@ -10,7 +10,7 @@ app.use(bodyParser.json());
 const pool = mariadb.createPool({
     host: 'localhost',
     user: 'root',
-    password: 'sua-senha',
+    password: 'estagio26hmp',
     database: 'task_manager',
     connectionLimit: 5
 });
