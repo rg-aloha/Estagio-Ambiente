@@ -14,6 +14,8 @@ const pool = mariadb.createPool({
     connectionLimit: 5
 });
 
+
+
 // Criar uma nova tarefa
 app.post('/tasks', async (req, res) => {
     const { title, description } = req.body;
@@ -141,4 +143,8 @@ app.get('/tasks', async (req, res) => {
     } finally {
         if (conn) conn.release();
     }
+});
+
+app.listen(PORT, () => {
+    console.log(`Servidor a correr na porta ${PORT}`);
 });
