@@ -6,7 +6,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>?</h1>
+        <h2>Tarefas <img src = "/icons/images.png"></img></h2>
         <TaskList /> {/* Mostrar a lista de tarefas */}
       </header>
     </div>
