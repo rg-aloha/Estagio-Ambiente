@@ -1,0 +1,103 @@
+/* Container geral */
+.tasklist-container {
+  width: 100%;
+  margin-top: 20px;
+}
+
+/* Linha de inputs + botão */
+.input-inline {
+  display: flex;           
+  align-items: center;      
+  gap: 0;                   
+  max-width: 700px;         
+  margin: 0 auto 20px auto; /* centraliza horizontalmente e espaça da lista */
+}
+
+/* Inputs */
+.input-inline input {
+  flex: 1;                  
+  padding: 10px 15px;
+  border: 1px solid #ccc;
+  border-right: none;       /* remove borda interna */
+  font-size: 16px;
+}
+
+.input-inline input:first-child {
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
+  border-right: none;
+}
+
+.input-inline input:last-child {
+  border-radius: 0;
+  border-right: none;
+  border-left: none; 
+}
+
+/* Botão */
+.input-inline button {
+  padding: 10px 20px;
+  border: 1px solid #61dafb;
+  border-left: none;
+
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px;
+  background-color: #61dafb;
+  color: white;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.input-inline button:hover {
+  background-color: #4ea0db;
+}
+
+/* Lista de tarefas */
+.task-list {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 0;
+  list-style: none;
+}
+
+.task-list li {
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+}
+
+.task-table {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto; /* centraliza horizontalmente */
+  border-collapse: collapse;
+  background-color: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.task-table th,
+.task-table td {
+  padding: 5px 15px;
+  text-align: left;
+  border-bottom: 1px solid #ccc;
+}
+
+.task-table th {
+  background-color: #f98b31;
+  color: white;
+}
+
+.task-table tr:last-child td {
+  border-bottom: none; /* remove linha inferior da última */
+}
+
+.task-list li ::before{
+  content: '';
+  position: absolute;
+  height: 28px;
+  width: 28px;
+  border-radius: 50%;
+ 
+  background-size: cover;
+  background-position: center;
+}
