@@ -1,9 +1,15 @@
 // backend/server.js
 const express = require('express');
 const mariadb = require('mariadb');
+const cors = require('cors');
 const app = express();
 const PORT = 3000;
 
+app.use(cors({
+  origin: 'http://localhost:3001',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type']
+}));
 app.use(express.json()); // substitui body-parser
 
 const pool = mariadb.createPool({

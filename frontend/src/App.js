@@ -1,14 +1,23 @@
 import React from 'react';
 import './App.css';
-import TaskList from './components/TaskList'; // Importar o componente
+import TaskList from './components/TaskList';
 
 function App() {
   return (
     <div className="App">
+
+      {/* 🔹 Inputs fora do cartão */}
+      <div className="top-bar">
+        <h1>Lista de Tarefas</h1>
+        <div className='divider'></div>
+        <TaskList showTable={false} />
+      </div>
+
+      {/* 🔹 Cartão com tabela */}
       <header className="App-header">
-        <h2>Tarefas <img src = "/icons/images.png"></img></h2>
-        <TaskList /> {/* Mostrar a lista de tarefas */}
+        <TaskList showInputs={false} />
       </header>
+
     </div>
   );
 }
