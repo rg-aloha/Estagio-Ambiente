@@ -39,17 +39,36 @@
   
   width: 75%;
   max-width: 2000px;
-  min-height: 70vh;
+  min-height: 300px;          /* altura mínima do cartão */
+  max-height: 70vh;
   
   background: #fff;
   padding: 30px;
   border-radius: 20px;
   font-size: calc(10px + 2vmin);
   margin-bottom:40px;
+
+  
+  overflow-y: auto;
+  overflow-x: auto;
 }
 
 .App-link {
   color: #61dafb;
+}
+
+/* Para navegadores Webkit (Chrome, Edge, Safari) */
+.App-header::-webkit-scrollbar {
+  width: 8px;
+}
+
+.App-header::-webkit-scrollbar-thumb {
+  background-color: rgba(81, 31, 94, 0.596);
+  border-radius: 4px;
+}
+
+.App-header::-webkit-scrollbar-track {
+  background: transparent;
 }
 
 @keyframes App-logo-spin {
@@ -73,9 +92,11 @@
  display: flex;
  align-items: center;
   justify-content: center; /* centra horizontalmente */
- margin-bottom: 20px;
- font-size: 35px;
+ margin-bottom: 2px;
+ font-size: clamp(35px, 5vw, 50px);
+ max-height: 60;
  color: rgb(255, 255, 255);
+ padding: 10px;
 }
 
 .input-container {
@@ -88,7 +109,7 @@
 .divider {
   width: 100%;
   max-width: 700px;  /* 👈 igual aos inputs */
-  height: 2px;
-  background: rgba(255, 255, 255, 0.5);
+  height: 1px;
+  background: rgb(255, 255, 255);
   margin: 15px auto;
 }
