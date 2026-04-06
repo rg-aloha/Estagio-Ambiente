@@ -68,6 +68,23 @@
   letter-spacing: 1px;
 }
 
+.task-table th:first-child {
+  border-top-left-radius: 15px;
+}
+
+.task-table th:last-child {
+  border-top-right-radius: 15px;
+}
+
+.task-table tr:last-child td:first-child {
+  border-bottom-left-radius: 15px;
+}
+
+.task-table tr:last-child td:last-child {
+  border-bottom-right-radius: 15px;
+  width: 40px;
+}
+
 /* Estilo das células */
 .task-table td {
   padding: 15px 10px;
@@ -81,6 +98,14 @@
 /* Coluna do Título */
 .task-table td:first-child {
   width: 40%;
+}
+
+.task-table td:last-child {
+  width: 40px;
+  text-align: right;
+  padding: 0; 
+  padding-right: 15px;
+  padding-left: 0;
 }
 
 /* Efeito quando a tarefa está concluída */
@@ -100,6 +125,7 @@
   background-repeat: no-repeat;
   opacity: 0.6;
   transition: opacity 0.2s;
+
   
 }
 
