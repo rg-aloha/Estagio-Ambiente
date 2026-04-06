@@ -6,7 +6,7 @@ import uncheckedIcon from '../assets/icons/download.png';
 const TaskList = ({ 
   showInputs = true, 
   showTable = true,
-  // Recebemos todas as funções e estados via Props vindos do App.js
+  // Receção de todas as funções e estados via Props vindos do App.js
   tasks, title, setTitle, description, setDescription,
   editingId, setEditingId, editTitle, setEditTitle,
   editDescription, setEditDescription, saveTask, deleteTask,
