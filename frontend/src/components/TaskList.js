@@ -1,5 +1,5 @@
 import './TaskList.css';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import checkedIcon from '../assets/icons/checked.png';
 import uncheckedIcon from '../assets/icons/download.png';
@@ -10,18 +10,30 @@ const TaskList = ({ showInputs = true, showTable = true }) => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
 
+  const editTask = (task) => {
+  setEditingId(task.id);
+  setEditTitle(task.title);
+  setEditDescription(task.description);
+};
+
   // Estados para edição inline
   const [editingId, setEditingId] = useState(null);
   const [editTitle, setEditTitle] = useState('');
   const [editDescription, setEditDescription] = useState('');
 
-  const toggleTaskCompleted = (id) => {
-    setTasks(prevTasks =>
-      prevTasks.map(task =>
-        task.id === id ? { ...task, completed: !task.completed } : task
-      )
-    );
-  };
+  const toggleTaskCompleted = async (task) => {
+  const updated = { ...task, completed: !task.completed };
+
+  setTasks(prev =>
+    prev.map(t => (t.id === task.id ? updated : t))
+  );
+
+  try {
+    await axios.put(`http://localhost:3000/tasks/${task.id}`, updated);
+  } catch (error) {
+    console.error('Erro ao atualizar tarefa:', error);
+  }
+};
 
   const fetchTasks = async () => {
     try {
@@ -36,33 +48,61 @@ const TaskList = ({ showInputs = true, showTable = true }) => {
     fetchTasks();
   }, []);
 
+  // Criar e atualizar tarefa (Versão Otimizada)
   const saveTask = async () => {
     try {
+      // Impede salvar se os campos estiverem vazios ou apenas com espaços
+      const currentTitle = editingId ? editTitle : title;
+      const currentDesc = editingId ? editDescription : description;
+
+      if (!currentTitle.trim() || !currentDesc.trim()) {
+        console.warn("Título e descrição são obrigatórios.");
+        return;
+      }
+
       if (editingId) {
-        // Editar tarefa existente
-        await axios.put(`http://localhost:3000/tasks/${editingId}`, {
+        // 1. Edita tarefa existente
+        const response = await axios.put(`http://localhost:3000/tasks/${editingId}`, {
           title: editTitle,
           description: editDescription
         });
+
+        
+        setTasks(prev => 
+          prev.map(t => (t.id === editingId ? response.data : t))
+        );
+
+        // Limpa estados de edição
         setEditingId(null);
         setEditTitle('');
         setEditDescription('');
+
       } else {
-        // Criar nova tarefa
-        if (!title || !description) return;
-        await axios.post('http://localhost:3000/tasks', {
-          title,
-          description
+        // 2. Cria nova tarefa
+        const response = await axios.post('http://localhost:3000/tasks', {
+          title: title,
+          description: description,
+          completed: false
         });
+
+       
+        if (response.data && response.data.id) {
+          setTasks(prevTasks => [...prevTasks, response.data]);
+        } else {
+          
+          fetchTasks();
+        }
+
+
         setTitle('');
         setDescription('');
       }
-      fetchTasks();
     } catch (error) {
       console.error('Erro ao salvar tarefa:', error);
     }
   };
 
+  //Apagar tarefa
   const deleteTask = async (id) => {
     try {
       await axios.delete(`http://localhost:3000/tasks/${id}`);
@@ -72,31 +112,53 @@ const TaskList = ({ showInputs = true, showTable = true }) => {
     }
   };
 
-  const editTask = (task) => {
-    setEditTitle(task.title);
-    setEditDescription(task.description);
-    setEditingId(task.id);
+const tableRef = useRef(null); 
+
+useEffect(() => {
+  const handleClickOutside = (event) => {
+    if (editingId && tableRef.current && !tableRef.current.contains(event.target)) {
+      
+      setEditingId(null); 
+    }
   };
 
+  document.addEventListener('mousedown', handleClickOutside);
+  
+  return () => {
+    document.removeEventListener('mousedown', handleClickOutside);
+  };
+}, [editingId]); 
+
   return (
-    <div className="tasklist-container">
+    <div className="tasklist-container" ref={tableRef}>
 
       {/* Inputs */}
       {showInputs && (
         <div className="input-inline">
           <input
             placeholder="Título"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            value={editingId ? editTitle : title}
+            onChange={(e) =>
+              editingId
+                ? setEditTitle(e.target.value)
+                : setTitle(e.target.value)
+            }
           />
+
           <input
             placeholder="Descrição"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            value={editingId ? editDescription : description}
+            onChange={(e) =>
+              editingId
+                ? setEditDescription(e.target.value)
+                : setDescription(e.target.value)
+            }
           />
+
           <button onClick={saveTask}>
             {editingId ? 'Salvar' : 'Adicionar'}
           </button>
+          <span></span>
         </div>
       )}
 
@@ -111,82 +173,94 @@ const TaskList = ({ showInputs = true, showTable = true }) => {
             </tr>
           </thead>
           <tbody>
-            {tasks.map(task => (
-              <tr key={task.id} className={task.completed ? 'checked' : ''}>
+  {tasks.map(task => {
+    const isEditing = editingId === task.id;
 
-                {/* Célula título */}
-                <td
-                  onClick={() => editTask(task)}
-                  style={{ position: 'relative', paddingLeft: '40px', cursor: 'pointer' }}
-                >
-                  {editingId === task.id ? (
-                    <input
-                      autoFocus
-                      value={editTitle}
-                      onChange={(e) => setEditTitle(e.target.value)}
-                      onClick={(e) => e.stopPropagation()} // evita conflito
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter') saveTask();
-                      }}
-                    />
-                  ) : (
-                    task.title
-                  )}
+    return (
+      <tr key={task.id} className={task.completed ? 'checked' : ''}>
+        
+        {/* Coluna do Título */}
+        <td
+          style={{ position: 'relative', paddingLeft: '40px', cursor: 'pointer' }}
+          onClick={() => !isEditing && editTask(task)} 
+        >
+          {/* Ícone de Checkbox */}
+          <span
+            onClick={(e) => {
+              e.stopPropagation();
+              toggleTaskCompleted(task);
+            }}
+            style={{
+              position: 'absolute',
+              left: '10px',
+              top: '50%',
+              transform: 'translateY(-50%)',
+              width: '20px',
+              height: '20px',
+              backgroundImage: `url(${task.completed ? checkedIcon : uncheckedIcon})`,
+              backgroundSize: 'contain',
+              backgroundRepeat: 'no-repeat',
+              cursor: 'pointer',
+            }}
+          ></span>
 
-                  <span
-                    onClick={(e) => {
-                      e.stopPropagation(); // evita entrar em edição
-                      toggleTaskCompleted(task.id);
-                    }}
-                    style={{
-                      position: 'absolute',
-                      left: '10px',
-                      top: '50%',
-                      transform: 'translateY(-50%)',
-                      width: '20px',
-                      height: '20px',
-                      backgroundImage: task.completed
-                        ? `url(${checkedIcon})`
-                        : `url(${uncheckedIcon})`,
-                      backgroundSize: 'contain',
-                      backgroundRepeat: 'no-repeat',
-                      cursor: 'pointer',
-                    }}
-                  ></span>
-                </td>
+          {isEditing ? (
+            <input
+              autoFocus
+              value={editTitle}
+              onChange={(e) => setEditTitle(e.target.value)}
+              onClick={(e) => e.stopPropagation()} // Impede o clique de fechar o input
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') saveTask();
+                if (e.key === 'Escape') setEditingId(null);
+              }}
+              style={{ width: '90%' }}
+            />
+          ) : (
+            <span style={{ textDecoration: task.completed ? 'line-through' : 'none' }}>
+              {task.title}
+            </span>
+          )}
+        </td>
 
-                {/* Célula descrição */}
-                <td
-                  onClick={() => editTask(task)}
-                  style={{ cursor: 'pointer' }}
-                >
-                  {editingId === task.id ? (
-                    <input
-                      autoFocus
-                      value={editDescription}
-                      onChange={(e) => setEditDescription(e.target.value)}
-                      onClick={(e) => e.stopPropagation()}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter') saveTask();
-                      }}
-                      onBlur={() => setEditingId(null)}
-                    />
-                  ) : (
-                    task.description
-                  )}
-                </td>
+        {/* Coluna da Descrição */}
+        <td 
+          onClick={() => !isEditing && editTask(task)}
+          style={{ cursor: 'pointer' }}
+        >
+          {isEditing ? (
+            <input
+              value={editDescription}
+              onChange={(e) => setEditDescription(e.target.value)}
+              onClick={(e) => e.stopPropagation()}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') saveTask();
+                if (e.key === 'Escape') setEditingId(null);
+              }}
+              style={{ width: '90%' }}
+            />
+          ) : (
+            task.description
+          )}
+        </td>
 
-                {/* Ações (delete) */}
-                <td style={{ width: '40px', textAlign: 'left', paddingleft:'30px' }}>
-                  <span
-                    className="deleteIcon"
-                    onClick={() => deleteTask(task.id)}
-                  ></span>
-                </td>
+        {/* Coluna do Delete */}
+        <td style={{ width: '40px', textAlign: 'center' }}>
+          <span
+            className="deleteIcon"
+            onClick={(e) => {
+              e.stopPropagation();
+              deleteTask(task.id);
+            }}
+            style={{ cursor: 'pointer' }}
+          >
+          </span>
+        </td>
 
-              </tr>
-            ))}
-          </tbody>
+      </tr>
+    );
+  })}
+</tbody>
         </table>
       )}
 

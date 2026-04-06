@@ -6,16 +6,14 @@ function App() {
   return (
     <div className="App">
 
-      {/* 🔹 Inputs fora do cartão */}
       <div className="top-bar">
         <h1>Lista de Tarefas</h1>
         <div className='divider'></div>
-        <TaskList showTable={false} />
       </div>
 
-      {/* 🔹 Cartão com tabela */}
       <header className="App-header">
-        <TaskList showInputs={false} />
+        {/* Renderizamos apenas UMA vez. O estado agora é partilhado! */}
+        <TaskList showInputs={true} showTable={true} />
       </header>
 
     </div>
