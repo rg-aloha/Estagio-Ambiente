@@ -24,3 +24,46 @@ editTask.forEach((editBtn) => {
     if()
   }
 })
+
+
+  const saveTask = async () => {
+  try {
+    if (editingId) {
+      // Edita tarefa existente
+      await axios.put(`http://localhost:3000/tasks/${editingId}`, {
+        title: editTitle,
+        description: editDescription
+      });
+
+      setEditingId(null);
+      setEditTitle('');
+      setEditDescription('');
+
+      // Atualiza lista após edição
+      fetchTasks();
+
+    } else {
+      if (!title || !description) return;
+
+      // Cria tarefa no backend
+      const response = await axios.post('http://localhost:3000/tasks', {
+        title,
+        description
+      });
+
+      // Se o backend retornar a tarefa completa com id, adiciona localmente
+      if (response.data && response.data.id) {
+        setTasks(prevTasks => [...prevTasks, response.data]);
+      } else {
+        // Caso contrário, recarrega a lista inteira
+        fetchTasks();
+      }
+
+      // Limpa inputs
+      setTitle('');
+      setDescription('');
+    }
+  } catch (error) {
+    console.error('Erro ao salvar tarefa:', error);
+  }
+};
