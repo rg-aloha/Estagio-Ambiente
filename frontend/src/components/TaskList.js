@@ -169,6 +169,7 @@ const TaskList = ({ showInputs = true, showTable = true }) => {
                       onKeyDown={(e) => {
                         if (e.key === 'Enter') saveTask();
                       }}
+                      onBlur={() => setEditingId(null)}
                     />
                   ) : (
                     task.description

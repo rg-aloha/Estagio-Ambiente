@@ -6,6 +6,7 @@
   padding: 0;
   font-family: 'Poppins', sans-serif;
   box-sizing: border-box;
+
 }
 
 .App {
@@ -16,7 +17,6 @@
 
   display: flex;
   flex-direction: column;
-  justify-content: center; 
   align-items: center;
 }
 
