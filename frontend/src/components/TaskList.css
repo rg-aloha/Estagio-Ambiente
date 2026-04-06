@@ -10,7 +10,7 @@
   align-items: center;      
   gap: 0;                   
   max-width: 700px;         
-  margin: 0 auto 20px auto; /* centraliza horizontalmente e espaça da lista */
+  margin: 0 auto 20px auto; 
 }
 
 /* Inputs */
@@ -18,7 +18,7 @@
   flex: 1;                  
   padding: 10px 15px;
   border: 1px solid #ccc;
-  border-right: none;       /* remove borda interna */
+  border-right: none;     
   font-size: 16px;
 }
 
@@ -53,19 +53,10 @@
 }
 
 /* Lista de tarefas */
-.task-list {
-  max-width: 700px;
-  margin: 0 auto;
-  padding: 0;
-  list-style: none;
-}
-
-
-
 .task-table {
   width: 100%;
   max-width: 1800px;
-  margin: 0 auto; /* centraliza horizontalmente */
+  margin: 0 auto; 
   border-collapse: collapse;
   background-color: #fff;
   border-radius: 10px;
@@ -86,14 +77,15 @@
 }
 
 .task-table tr:last-child td {
-  border-bottom: none; /* remove linha inferior da última */
+  border-bottom: none; 
 }
 
 .task-table td {
   padding: 10px;
   border-bottom: 1px solid #ccc;
   position: relative;
-  padding-left: 40px; /* espaço para o ícone */
+  padding-left: 40px; 
+  font-size: 20px;
 }
 
 .task-table td:first-child::before {
@@ -102,9 +94,9 @@
   top: 50%;
   left: 10px;
   transform: translateY(-50%);
-  width: 20px;      /* tamanho do ícone */
+  width: 20px;      
   height: 20px;
-  background-image: url('../assets/icons/download.png'); /* ícone unchecked */
+  background-image: url('../assets/icons/download.png'); 
   background-size: contain;
   background-repeat: no-repeat;
   display: block;
@@ -119,3 +111,13 @@
   background-image: url('../assets/icons/checked.png');
 }
 
+.deleteIcon {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  background-image: url('../assets/icons/delete.png'); /* static path */
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center; /* center in the small column */
+  cursor: pointer;
+}
