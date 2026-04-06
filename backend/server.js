@@ -5,12 +5,15 @@ const cors = require('cors');
 const app = express();
 const PORT = 3000;
 
+// JSON parsing middleware
+app.use(express.json());
+
+// CORS setup
 app.use(cors({
   origin: 'http://localhost:3001',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type']
 }));
-app.use(express.json()); // substitui body-parser
 
 const pool = mariadb.createPool({
     host: 'localhost',

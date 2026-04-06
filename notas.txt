@@ -1,0 +1,26 @@
+- backend server.js original
+const express = require('express'); 
+const bodyParser = require('body-parser'); 
+const mariadb = require('mariadb'); 
+const app = express(); const PORT = 3000;
+
+app.use(bodyParser.json());
+
+
+// botão de edit
+const editTask = (id) => {
+  const taskToEdit = tasks.find(task => task.id === id);
+  if (taskToEdit) {
+    setTitle(taskToEdit.title);
+    setDescription(taskToEdit.description);
+    // Aqui podes guardar um estado "editingId" se quiseres atualizar em vez de adicionar
+  }
+};
+
+const editTask = document.querySelectorAll(".edit")
+editTask.forEach((editBtn) => {
+  editBtn.onClick = (e) => {
+    let targetElement = e.target;
+    if()
+  }
+})
