@@ -116,10 +116,10 @@
 
 /* Ícone de Delete */
 .deleteIcon {
-  display: block;
+  display: inline-block;;
   width: 22px;
   height: 22px;
-  margin: 0 auto;
+  margin: 0;
   background-image: url('../assets/icons/delete.png');
   background-size: contain;
   background-repeat: no-repeat;
