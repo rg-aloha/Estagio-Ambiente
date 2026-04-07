@@ -108,7 +108,7 @@
   padding-left: 0;
 }
 
-/* Efeito quando a tarefa está concluída */
+/* Efeito quando a tarefa está concluída  */
 .task-table tr.checked td {
   color: #aaa;
   text-decoration: line-through;
@@ -125,8 +125,6 @@
   background-repeat: no-repeat;
   opacity: 0.6;
   transition: opacity 0.2s;
-
-  
 }
 
 .deleteIcon:hover {
@@ -135,6 +133,7 @@
 
 /* Inputs de Edição Inline */
 .task-table input {
+  display: inline-block;
   width: 95%;
   padding: 8px;
   border: 1px solid #61dafb;

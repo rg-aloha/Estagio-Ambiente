@@ -124,7 +124,7 @@ const TaskList = ({
                   </td>
 
                   {/* Coluna do Delete */}
-                  <td style={{ width: '40px', textAlign: 'center' }}>
+                  <td style={{ width: '40px', textAlign: 'right' }}>
                     <span
                       className="deleteIcon"
                       onClick={(e) => {
