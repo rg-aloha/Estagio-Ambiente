@@ -64,12 +64,12 @@
 }
 
 .App-header::-webkit-scrollbar-thumb {
-  background-color: #4e085f;
+  background-color: #900eb1b7;
   border-radius: 10px;
 }
 
 .App-header::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: #f1f1f100;
 }
 
 @keyframes App-logo-spin {
