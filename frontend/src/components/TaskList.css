@@ -1,4 +1,3 @@
-/* Container geral */
 .tasklist-container {
   width: 100%;
 }
@@ -57,6 +56,69 @@
   background-color: transparent; 
   table-layout: fixed; 
 }
+
+/* Barra de Progresso */
+.progress-container {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto 15px auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding-top: 10px;
+}
+
+.progress-bar-wrapper {
+  width: 100%;
+  height: 12px;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #2adae0, #f98b31);
+  transition: width 0.4s ease;
+}
+
+.progress-text {
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* Inputs Superiores */
+.input-inline {
+  display: flex;
+  max-width: 600px;
+  margin: 0 auto 20px auto;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.input-inline input {
+  flex: 1;
+  padding: 12px 20px;
+  border: none;
+  outline: none;
+}
+
+.input-inline input:last-of-type {
+  border-left: 1px solid #eee;
+}
+
+.input-inline button {
+  padding: 12px 25px;
+  border: none;
+  background-color: #2adae0;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
 
 .task-table th {
   background-color: #f98b31;

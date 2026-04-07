@@ -1,45 +1,78 @@
 import './TaskList.css';
-import React from 'react';
+import React, { useRef } from 'react';
 import checkedIcon from '../assets/icons/checked.png';
 import uncheckedIcon from '../assets/icons/download.png';
 
+//Props
 const TaskList = ({ 
   showInputs = true, 
   showTable = true,
-  // Receção de todas as funções e estados via Props vindos do App.js
   tasks, title, setTitle, description, setDescription,
   editingId, setEditingId, editTitle, setEditTitle,
   editDescription, setEditDescription, saveTask, deleteTask,
-  toggleTaskCompleted, editTask, tableRef
+  toggleTaskCompleted, editTask, tableRef,
+  progressPercentage // Recebido do App.js
 }) => {
+
+  // Refs para controlar o foco ao editar
+  const titleInputRef = useRef(null);
+  const descInputRef = useRef(null);
+
+  // Função para entrar em modo de edição e focar o campo correto
+  const handleEditClick = (task, field) => {
+    editTask(task);
+    
+    // Pequeno delay para o React renderizar o input antes de tentarmos o foco
+    setTimeout(() => {
+      if (field === 'title' && titleInputRef.current) {
+        titleInputRef.current.focus();
+      } else if (field === 'desc' && descInputRef.current) {
+        descInputRef.current.focus();
+      }
+    }, 50);
+  };
 
   return (
     <div className="tasklist-container" ref={tableRef}>
 
-      {/* 1. Área de Inputs (Criação ou Edição) */}
+      {/* 1. Área de Progresso e Inputs */}
       {showInputs && (
-        <div className="input-inline">
-          <input
-            placeholder="Título"
-            value={editingId ? editTitle : title}
-            onChange={(e) =>
-              editingId ? setEditTitle(e.target.value) : setTitle(e.target.value)
-            }
-          />
+        <>
+          {/* Barra de Progresso */}
+          <div className="progress-container">
+            <div className="progress-bar-wrapper">
+              <div 
+                className="progress-fill" 
+                style={{ width: `${progressPercentage}%` }}
+              ></div>
+            </div>
+            <span className="progress-text">
+              {Math.round(progressPercentage)}% concluído
+            </span>
+          </div>
 
-          <input
-            placeholder="Descrição"
-            value={editingId ? editDescription : description}
-            onChange={(e) =>
-              editingId ? setEditDescription(e.target.value) : setDescription(e.target.value)
-            }
-          />
+          <div className="input-inline">
+            <input
+              placeholder="Título"
+              value={editingId ? editTitle : title}
+              onChange={(e) =>
+                editingId ? setEditTitle(e.target.value) : setTitle(e.target.value)
+              }
+            />
 
-          <button onClick={saveTask}>
-            {editingId ? 'Salvar' : 'Adicionar'}
-          </button>
-          <span></span>
-        </div>
+            <input
+              placeholder="Descrição"
+              value={editingId ? editDescription : description}
+              onChange={(e) =>
+                editingId ? setEditDescription(e.target.value) : setDescription(e.target.value)
+              }
+            />
+
+            <button onClick={saveTask}>
+              {editingId ? 'Salvar' : 'Adicionar'}
+            </button>
+          </div>
+        </>
       )}
 
       {/* 2. Área da Tabela */}
@@ -49,7 +82,7 @@ const TaskList = ({
             <tr>
               <th>Título</th>
               <th>Descrição</th>
-              <th></th>
+              <th style={{ width: '40px' }}></th>
             </tr>
           </thead>
           <tbody>
@@ -61,31 +94,23 @@ const TaskList = ({
                   
                   {/* Coluna do Título */}
                   <td
-                    style={{ position: 'relative', paddingLeft: '40px', cursor: 'pointer' }}
-                    onClick={() => !isEditing && editTask(task)}
+                    className="td-title"
+                    onClick={() => !isEditing && handleEditClick(task, 'title')}
                   >
                     <span
+                      className="check-icon"
                       onClick={(e) => {
                         e.stopPropagation();
                         toggleTaskCompleted(task);
                       }}
                       style={{
-                        position: 'absolute',
-                        left: '10px',
-                        top: '50%',
-                        transform: 'translateY(-50%)',
-                        width: '20px',
-                        height: '20px',
                         backgroundImage: `url(${task.completed ? checkedIcon : uncheckedIcon})`,
-                        backgroundSize: 'contain',
-                        backgroundRepeat: 'no-repeat',
-                        cursor: 'pointer',
                       }}
                     ></span>
 
                     {isEditing ? (
                       <input
-                        autoFocus
+                        ref={titleInputRef}
                         value={editTitle}
                         onChange={(e) => setEditTitle(e.target.value)}
                         onClick={(e) => e.stopPropagation()}
@@ -93,10 +118,9 @@ const TaskList = ({
                           if (e.key === 'Enter') saveTask();
                           if (e.key === 'Escape') setEditingId(null);
                         }}
-                        style={{ width: '90%' }}
                       />
                     ) : (
-                      <span style={{ textDecoration: task.completed ? 'line-through' : 'none' }}>
+                      <span className="task-text">
                         {task.title}
                       </span>
                     )}
@@ -104,11 +128,12 @@ const TaskList = ({
 
                   {/* Coluna da Descrição */}
                   <td 
-                    onClick={() => !isEditing && editTask(task)}
-                    style={{ cursor: 'pointer' }}
+                    className="td-desc"
+                    onClick={() => !isEditing && handleEditClick(task, 'desc')}
                   >
                     {isEditing ? (
                       <input
+                        ref={descInputRef}
                         value={editDescription}
                         onChange={(e) => setEditDescription(e.target.value)}
                         onClick={(e) => e.stopPropagation()}
@@ -116,7 +141,6 @@ const TaskList = ({
                           if (e.key === 'Enter') saveTask();
                           if (e.key === 'Escape') setEditingId(null);
                         }}
-                        style={{ width: '90%' }}
                       />
                     ) : (
                       task.description
@@ -124,14 +148,13 @@ const TaskList = ({
                   </td>
 
                   {/* Coluna do Delete */}
-                  <td style={{ width: '40px', textAlign: 'right' }}>
+                  <td className="td-delete">
                     <span
                       className="deleteIcon"
                       onClick={(e) => {
                         e.stopPropagation();
                         deleteTask(task.id);
                       }}
-                      style={{ cursor: 'pointer' }}
                     ></span>
                   </td>
 
@@ -141,7 +164,6 @@ const TaskList = ({
           </tbody>
         </table>
       )}
-
     </div>
   );
 };

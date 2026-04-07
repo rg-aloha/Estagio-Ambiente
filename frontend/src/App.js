@@ -32,7 +32,7 @@ function App() {
   const completedTasks = tasks.filter(t => t.completed).length;
   const progressPercentage = totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0;
 
-  // 2. Criar e editar Tarefas
+  // 3. Criar e editar Tarefas
   const saveTask = async () => {
     try {
       if (editingId) {
@@ -63,7 +63,7 @@ function App() {
     }
   };
 
-  // 3. Apagar Tarefas
+  // 4. Apagar Tarefas
   const deleteTask = async (id) => {
     try {
       await axios.delete(`http://localhost:3000/tasks/${id}`);
@@ -73,7 +73,7 @@ function App() {
     }
   };
 
-  // 4. Tarefa Terminada
+  // 5. Tarefa Terminada
   const toggleTaskCompleted = async (task) => {
     const updated = { ...task, completed: !task.completed };
     setTasks(prev => prev.map(t => (t.id === task.id ? updated : t)));
@@ -102,12 +102,12 @@ function App() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [editingId]);
 
-  // 5. Agrupamento num objeto para passar via Props
+  // 7. Agrupamento num objeto para passar via Props
   const sharedProps = {
     tasks, title, setTitle, description, setDescription,
     editingId, setEditingId, editTitle, setEditTitle,
     editDescription, setEditDescription, saveTask, deleteTask,
-    toggleTaskCompleted, editTask, tableRef
+    toggleTaskCompleted, editTask, tableRef, progressPercentage
   };
 
   return (
