@@ -27,6 +27,12 @@ function App() {
     fetchTasks();
   }, []);
 
+  // 2. Cálculo do progresso
+  const totalTasks = tasks.length;
+  const completedTasks = tasks.filter(t => t.completed).length;
+  const progressPercentage = totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0;
+
+  // 2. Criar e editar Tarefas
   const saveTask = async () => {
     try {
       if (editingId) {
@@ -57,6 +63,7 @@ function App() {
     }
   };
 
+  // 3. Apagar Tarefas
   const deleteTask = async (id) => {
     try {
       await axios.delete(`http://localhost:3000/tasks/${id}`);
@@ -66,6 +73,7 @@ function App() {
     }
   };
 
+  // 4. Tarefa Terminada
   const toggleTaskCompleted = async (task) => {
     const updated = { ...task, completed: !task.completed };
     setTasks(prev => prev.map(t => (t.id === task.id ? updated : t)));
@@ -83,7 +91,7 @@ function App() {
     setEditDescription(task.description);
   };
 
-  // 2. Click Outside para cancelar edição
+  // 4. Click Outside para cancelar edição
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (editingId && tableRef.current && !tableRef.current.contains(event.target)) {
@@ -94,7 +102,7 @@ function App() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [editingId]);
 
-  // 3. Agrupamento num objeto para passar via Props
+  // 5. Agrupamento num objeto para passar via Props
   const sharedProps = {
     tasks, title, setTitle, description, setDescription,
     editingId, setEditingId, editTitle, setEditTitle,
