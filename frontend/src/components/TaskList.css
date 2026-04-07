@@ -145,3 +145,35 @@
   border: 1px solid #2adae0;
   border-radius: 4px;
 }
+
+/* Ícone de arrastar */
+.drag-handle {
+  cursor: grab;
+  color: #ccc;
+  font-size: 18px;
+  text-align: center;
+  padding-left: 10px !important;
+}
+
+.drag-handle:active {
+  cursor: grabbing;
+}
+
+/* Estado visual durante o drag */
+.is-dragging {
+  background: #f9f9f9 !important;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  border-radius: 8px;
+  z-index: 999;
+}
+
+/* Garante que as células mantenham o tamanho ao arrastar */
+.task-table tr {
+  display: table-row;
+  transition: background 0.2s ease;
+}
+
+.task-table {
+  /* Adicione isso se a tabela tremer no drag */
+  border-collapse: collapse; 
+}
