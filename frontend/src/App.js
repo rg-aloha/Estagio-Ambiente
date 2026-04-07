@@ -91,7 +91,7 @@ function App() {
     setEditDescription(task.description);
   };
 
-  // 4. Click Outside para cancelar edição
+  // 6. Click Outside para cancelar edição
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (editingId && tableRef.current && !tableRef.current.contains(event.target)) {

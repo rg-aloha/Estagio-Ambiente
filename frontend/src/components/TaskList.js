@@ -3,42 +3,39 @@ import React, { useRef } from 'react';
 import checkedIcon from '../assets/icons/checked.png';
 import uncheckedIcon from '../assets/icons/download.png';
 
-//Props
 const TaskList = ({ 
   showInputs = true, 
   showTable = true,
   tasks, title, setTitle, description, setDescription,
   editingId, setEditingId, editTitle, setEditTitle,
   editDescription, setEditDescription, saveTask, deleteTask,
-  toggleTaskCompleted, editTask, tableRef,
-  progressPercentage // Recebido do App.js
+  toggleTaskCompleted, tableRef,
+  progressPercentage 
 }) => {
 
-  // Refs para controlar o foco ao editar
+  // 1. Definição dos Refs (estavam faltando no seu erro de ESLint)
   const titleInputRef = useRef(null);
   const descInputRef = useRef(null);
 
-  // Função para entrar em modo de edição e focar o campo correto
+  // 2. Função para gerenciar o clique de edição (estava faltando)
   const handleEditClick = (task, field) => {
-    editTask(task);
-    
-    // Pequeno delay para o React renderizar o input antes de tentarmos o foco
+    setEditingId(task.id);
+    setEditTitle(task.title);
+    setEditDescription(task.description);
+
+    // Foca no input correspondente após o estado atualizar
     setTimeout(() => {
-      if (field === 'title' && titleInputRef.current) {
-        titleInputRef.current.focus();
-      } else if (field === 'desc' && descInputRef.current) {
-        descInputRef.current.focus();
-      }
-    }, 50);
+      if (field === 'title' && titleInputRef.current) titleInputRef.current.focus();
+      if (field === 'desc' && descInputRef.current) descInputRef.current.focus();
+    }, 0);
   };
 
   return (
     <div className="tasklist-container" ref={tableRef}>
 
-      {/* 1. Área de Progresso e Inputs */}
+      {/* 1. Área de Progresso e Inputs Superiores */}
       {showInputs && (
         <>
-          {/* Barra de Progresso */}
           <div className="progress-container">
             <div className="progress-bar-wrapper">
               <div 
@@ -59,7 +56,6 @@ const TaskList = ({
                 editingId ? setEditTitle(e.target.value) : setTitle(e.target.value)
               }
             />
-
             <input
               placeholder="Descrição"
               value={editingId ? editDescription : description}
@@ -67,7 +63,6 @@ const TaskList = ({
                 editingId ? setEditDescription(e.target.value) : setDescription(e.target.value)
               }
             />
-
             <button onClick={saveTask}>
               {editingId ? 'Salvar' : 'Adicionar'}
             </button>
@@ -75,7 +70,7 @@ const TaskList = ({
         </>
       )}
 
-      {/* 2. Área da Tabela */}
+      {/* 2. Tabela de Tarefas */}
       {showTable && (
         <table className="task-table">
           <thead>
@@ -95,6 +90,7 @@ const TaskList = ({
                   {/* Coluna do Título */}
                   <td
                     className="td-title"
+                    style={{ position: 'relative', paddingLeft: '45px' }} // Garante espaço para o ícone
                     onClick={() => !isEditing && handleEditClick(task, 'title')}
                   >
                     <span
@@ -120,7 +116,7 @@ const TaskList = ({
                         }}
                       />
                     ) : (
-                      <span className="task-text">
+                      <span style={{ textDecoration: task.completed ? 'line-through' : 'none' }}>
                         {task.title}
                       </span>
                     )}
