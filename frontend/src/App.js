@@ -13,7 +13,7 @@ function App() {
 
   const tableRef = useRef(null); 
 
-  // 2. Funções de fetch
+  // 1. Funções de comunicação com o Backend
   const fetchTasks = async () => {
     try {
       const response = await axios.get('http://localhost:3000/tasks');
@@ -27,7 +27,12 @@ function App() {
     fetchTasks();
   }, []);
 
-  // 3. Criar e Editar Tarefa
+  // 2. Cálculo do progresso
+  const totalTasks = tasks.length;
+  const completedTasks = tasks.filter(t => t.completed).length;
+  const progressPercentage = totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0;
+
+  // 3. Criar e editar Tarefas
   const saveTask = async () => {
     try {
       if (editingId) {
@@ -58,7 +63,7 @@ function App() {
     }
   };
 
-  // 4. Apagar Tarefa
+  // 4. Apagar Tarefas
   const deleteTask = async (id) => {
     try {
       await axios.delete(`http://localhost:3000/tasks/${id}`);
@@ -68,6 +73,7 @@ function App() {
     }
   };
 
+  // 5. Tarefa Terminada
   const toggleTaskCompleted = async (task) => {
     const updated = { ...task, completed: !task.completed };
     setTasks(prev => prev.map(t => (t.id === task.id ? updated : t)));
@@ -85,7 +91,7 @@ function App() {
     setEditDescription(task.description);
   };
 
-  // Click Outside
+  // 6. Click Outside para cancelar edição
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (editingId && tableRef.current && !tableRef.current.contains(event.target)) {
@@ -96,25 +102,25 @@ function App() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [editingId]);
 
-  // Agrupamento num objeto para as props
+  // 7. Agrupamento num objeto para passar via Props
   const sharedProps = {
     tasks, title, setTitle, description, setDescription,
     editingId, setEditingId, editTitle, setEditTitle,
     editDescription, setEditDescription, saveTask, deleteTask,
-    toggleTaskCompleted, editTask, tableRef
+    toggleTaskCompleted, editTask, tableRef, progressPercentage
   };
 
   return (
     <div className="App">
 
-      {/* 🔹 Inputs fora do cartão */}
+      {/* 🔹 Inputs fora do cartão (no topo) */}
       <div className="top-bar">
         <h1>Lista de Tarefas</h1>
         <div className='divider'></div>
         <TaskList showTable={false} {...sharedProps} />
       </div>
 
-      {/* 🔹 Cartão branco do fundo*/}
+      {/* 🔹 Cartão branco do fundo (Apenas a Tabela) */}
       <header className="App-header">
         <TaskList showInputs={false} {...sharedProps} />
       </header>

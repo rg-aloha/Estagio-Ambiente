@@ -1,123 +1,147 @@
-/* Container geral */
 .tasklist-container {
   width: 100%;
-  margin-top: 20px;
 }
 
-/* Linha de inputs + botão */
-.input-inline {
-  display: flex;           
-  align-items: center;      
-  gap: 0;                   
-  max-width: 700px;         
-  margin: 0 auto 20px auto; 
-}
-
-/* Inputs */
-.input-inline input {
-  flex: 1;                  
-  padding: 10px 15px;
-  border: 1px solid #ccc;
-  border-right: none;     
-  font-size: 16px;
-}
-
-.input-inline input:first-child {
-  border-top-left-radius: 20px;
-  border-bottom-left-radius: 20px;
-  border-right: none;
-}
-
-.input-inline input:last-child {
-  border-radius: 0;
-  border-right: none;
-  border-left: none; 
-}
-
-/* Botão */
-.input-inline button {
-  padding: 10px 20px;
-  border: 1px solid #61dafb;
-  border-left: none;
-
-  border-top-right-radius: 20px;
-  border-bottom-right-radius: 20px;
-  background-color: #61dafb;
-  color: white;
-  cursor: pointer;
-  font-size: 16px;
-}
-
-.input-inline button:hover {
-  background-color: #4ea0db;
-}
-
-/* Lista de tarefas */
-.task-table {
+/* Barra de Progresso */
+.progress-container {
   width: 100%;
-  max-width: 1800px;
-  margin: 0 auto; 
-  border-collapse: collapse;
-  background-color: #fff;
+  max-width: 600px;
+  margin: 0 auto 15px auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding-top: 10px;
+}
+
+.progress-bar-wrapper {
+  width: 100%;
+  height: 12px;
+  background-color: rgba(255, 255, 255, 0.2);
   border-radius: 10px;
   overflow: hidden;
-  table-layout: auto;
 }
 
-.task-table th,
-.task-table td {
-  padding: 5px 15px;
-  text-align: left;
-  border-bottom: 1px solid #ccc;
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #2adae0, #f98b31);
+  transition: width 0.4s ease;
+}
+
+.progress-text {
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* Inputs Superiores */
+.input-inline {
+  display: flex;
+  max-width: 600px;
+  margin: 0 auto 20px auto;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.input-inline input {
+  flex: 1;
+  padding: 12px 20px;
+  border: none;
+  outline: none;
+}
+
+.input-inline input:last-of-type {
+  border-left: 1px solid #eee;
+}
+
+.input-inline button {
+  padding: 12px 25px;
+  border: none;
+  background-color: #2adae0;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Tabela */
+.task-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  table-layout: fixed;
+  border-radius: 15px;
+  overflow: hidden;
 }
 
 .task-table th {
   background-color: #f98b31;
   color: white;
+  padding: 15px;
+  text-align: left;
 }
 
-.task-table tr:last-child td {
-  border-bottom: none; 
-}
-
+/* Células Base */
 .task-table td {
-  padding: 10px;
-  border-bottom: 1px solid #ccc;
-  position: relative;
-  padding-left: 40px; 
-  font-size: 20px;
+  padding: 15px 10px;
+  border-bottom: 1px solid #eee;
+  vertical-align: middle;
+  word-wrap: break-word;
 }
 
-.task-table td:first-child::before {
-  content: '';
+/* Alinhamentos Específicos */
+.td-title {
+  position: relative;
+  padding-left: 45px !important;
+  width: 40%;
+  cursor: pointer;
+}
+
+.check-icon {
   position: absolute;
+  left: 15px;
   top: 50%;
-  left: 10px;
   transform: translateY(-50%);
-  width: 20px;      
+  width: 20px;
   height: 20px;
-  background-image: url('../assets/icons/download.png'); 
   background-size: contain;
   background-repeat: no-repeat;
-  display: block;
+  cursor: pointer;
 }
 
-.task-table tr.checked td {
-  color: #555;
-  text-decoration: line-through;
+.td-desc {
+  cursor: pointer;
 }
 
-.task-table checked::before{
-  background-image: url('../assets/icons/checked.png');
+.td-delete {
+  width: 50px;
+  text-align: right;
+  padding-right: 15px !important;
 }
 
 .deleteIcon {
-  display: inline-block;
-  width: 20px;
-  height: 20px;
-  background-image: url('../assets/icons/delete.png'); /* static path */
+  display: inline-block; /* Permite o text-align right */
+  width: 22px;
+  height: 22px;
+  background-image: url('../assets/icons/delete.png');
   background-size: contain;
   background-repeat: no-repeat;
-  background-position: center; /* center in the small column */
+  opacity: 0.6;
   cursor: pointer;
+}
+
+.deleteIcon:hover { opacity: 1; }
+
+.task-table tr.checked .task-text,
+.task-table tr.checked .td-desc {
+  color: #aaa;
+  text-decoration: line-through;
+}
+
+/* Inputs de edição na tabela */
+.task-table input {
+  width: 95%;
+  padding: 5px;
+  border: 1px solid #2adae0;
+  border-radius: 4px;
 }
