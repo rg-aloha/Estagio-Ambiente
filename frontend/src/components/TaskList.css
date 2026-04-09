@@ -97,6 +97,32 @@
   cursor: pointer;
 }
 
+/* --- Versão Mobile --- */
+@media (max-width: 600px) {
+  .input-inline {
+    flex-direction: column; /* Empilha: Input 1 -> Input 2 -> Botão */
+    border-radius: 15px;
+    max-width: 90%;         /* Não cola nas bordas do telemóvel */
+  }
+
+  .input-inline input {
+    width: 100%;
+    border-bottom: 1px solid #eee; /* Divisória horizontal agora */
+    padding: 15px;
+  }
+
+  .input-inline input:last-of-type {
+    border-left: none; /* Remove divisória vertical no mobile */
+  }
+
+  .input-inline button {
+    width: 100%;
+    padding: 15px;
+    border-radius: 0; /* Ocupa a base toda do container */
+    font-size: 16px;
+  }
+}
+
 /* Tabela */
 .task-table {
   width: 100%;
@@ -178,4 +204,23 @@
   padding: 6px;
   border: 1px solid #2adae0;
   border-radius: 4px;
+}
+
+.task-table th {
+  background-color: #f98b31;
+  color: white;
+  padding: 15px;
+  text-align: left;
+  font-size: 16px;
+  text-transform: uppercase;
+  /* Remova o border-top-left-radius daqui para não conflitar */
+}
+
+/* Garante que o fundo laranja acompanhe o arredondamento da tabela */
+.task-table thead tr:first-child th:first-child {
+  border-top-left-radius: 15px;
+}
+
+.task-table thead tr:first-child th:last-child {
+  border-top-right-radius: 15px;
 }

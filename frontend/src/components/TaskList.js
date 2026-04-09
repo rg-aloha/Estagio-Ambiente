@@ -12,7 +12,7 @@ const TaskList = ({
   editDescription, setEditDescription, saveTask, deleteTask,
   toggleTaskCompleted, editTask, tableRef,
   progressPercentage,
-  filter, setFilter 
+  filter 
 }) => {
 
   const titleInputRef = useRef(null);
@@ -51,138 +51,111 @@ const TaskList = ({
               onChange={(e) => editingId ? setEditDescription(e.target.value) : setDescription(e.target.value)} 
               onKeyDown={(e) => e.key === 'Enter' && saveTask()}
             />
-            <button onClick={saveTask}>{editingId ? 'Salvar' : 'Adicionar'}</button>
+            <button onClick={saveTask}>
+              {editingId ? 'Salvar' : 'Adicionar'}
+            </button>
           </div>
         </>
       )}
 
       {showTable && (
-        <>
-        {/* Filtro */}
-          <div className="filter-container">
-            <label htmlFor="filter-select">Ordenar por:</label>
-            <select 
-              id="filter-select"
-              className="filter-dropdown"
-              value={filter}
-              onChange={(e) => setFilter(e.target.value)}
-            >
-              <option value="manual">Ordem Manual</option>
-              <option value="alpha">A-Z</option>
-              <option value="z-alpha">Z-A</option>
-              <option value="pending">Estado (Por Fazer)</option>
-              <option value="completed">Estado (Concluídas)</option>
-              <option value="date">Data (Recentes)</option>
-              <option value="date-old">Data (Mais Antigas)</option>
-            </select>
-          </div>
-
-          {/* Tabela */}
-          <table className="task-table">
-            <thead>
-              <tr>
-                <th style={{ width: '40px' }}></th>
-                <th>Título</th>
-                <th>Descrição</th>
-                <th style={{ width: '50px' }}></th>
-              </tr>
-            </thead>
-            
-            
-            <Droppable droppableId="table-body">
-              {(provided) => (
-                <tbody ref={provided.innerRef} {...provided.droppableProps}>
-                  {tasks.map((task, index) => {
-                    const isEditing = editingId === task.id;
-                    return (
-                      <Draggable 
-                        key={task.id} 
-                        draggableId={task.id.toString()} 
-                        index={index}
-                        isDragDisabled={filter !== 'manual'}
-                      >
-                        {(provided, snapshot) => (
-                          <tr 
-                            ref={provided.innerRef} 
-                            {...provided.draggableProps}
-                            className={`${task.completed ? 'checked' : ''} ${snapshot.isDragging ? 'is-dragging' : ''}`}
-                            style={{ 
-                              ...provided.draggableProps.style,
-                              display: snapshot.isDragging ? 'table' : 'table-row' 
-                            }}
+        <table className="task-table">
+          <thead>
+            <tr>
+              <th style={{ width: '40px' }}></th>
+              <th>Título</th>
+              <th>Descrição</th>
+              <th style={{ width: '50px' }}></th>
+            </tr>
+          </thead>
+          
+          <Droppable droppableId="table-body">
+            {(provided) => (
+              <tbody ref={provided.innerRef} {...provided.droppableProps}>
+                {tasks.map((task, index) => {
+                  const isEditing = editingId === task.id;
+                  return (
+                    <Draggable 
+                      key={task.id} 
+                      draggableId={task.id.toString()} 
+                      index={index}
+                      isDragDisabled={filter !== 'manual'}
+                    >
+                      {(provided, snapshot) => (
+                        <tr 
+                          ref={provided.innerRef} 
+                          {...provided.draggableProps}
+                          className={`${task.completed ? 'checked' : ''} ${snapshot.isDragging ? 'is-dragging' : ''}`}
+                          style={{ 
+                            ...provided.draggableProps.style,
+                            display: snapshot.isDragging ? 'table' : 'table-row' 
+                          }}
+                        >
+                          <td 
+                            {...provided.dragHandleProps} 
+                            className="drag-handle"
+                            style={{ opacity: filter === 'manual' ? 1 : 0.3 }}
                           >
-                            <td 
-                              {...provided.dragHandleProps} 
-                              className="drag-handle"
-                              style={{ opacity: filter === 'manual' ? 1 : 0.3 }}
-                            >
-                              ⠿
-                            </td>
+                            ⠿
+                          </td>
 
-                            <td className="td-title" onClick={() => !isEditing && handleEditClick(task, 'title')}>
-                              <span
-                                className="check-icon"
-                                onClick={(e) => { 
-                                  e.stopPropagation(); 
-                                  toggleTaskCompleted(task); 
-                                }}
-                                style={{ 
-                                  backgroundImage: `url(${task.completed ? checkedIcon : uncheckedIcon})` 
-                                }}
-                              ></span>
-                              {isEditing ? (
-                                <input 
-                                  ref={titleInputRef} 
-                                  value={editTitle} 
-                                  onChange={(e) => setEditTitle(e.target.value)}
-                                  onKeyDown={(e) => {
-                                    if (e.key === 'Enter') saveTask();
-                                    if (e.key === 'Escape') setEditingId(null);
-                                  }}
-                                  onClick={(e) => e.stopPropagation()}
-                                />
-                              ) : (
-                                <span className="task-text">{task.title}</span>
-                              )}
-                            </td>
+                          <td className="td-title" onClick={() => !isEditing && handleEditClick(task, 'title')}>
+                            <span
+                              className="check-icon"
+                              onClick={(e) => { 
+                                e.stopPropagation(); 
+                                toggleTaskCompleted(task); 
+                              }}
+                              style={{ 
+                                backgroundImage: `url(${task.completed ? checkedIcon : uncheckedIcon})` 
+                              }}
+                            ></span>
+                            {isEditing ? (
+                              <input 
+                                ref={titleInputRef} 
+                                value={editTitle} 
+                                onChange={(e) => setEditTitle(e.target.value)}
+                                onKeyDown={(e) => e.key === 'Enter' && saveTask()}
+                                onClick={(e) => e.stopPropagation()}
+                              />
+                            ) : (
+                              <span className="task-text">{task.title}</span>
+                            )}
+                          </td>
 
-                            <td className="td-desc" onClick={() => !isEditing && handleEditClick(task, 'desc')}>
-                              {isEditing ? (
-                                <input 
-                                  ref={descInputRef} 
-                                  value={editDescription} 
-                                  onChange={(e) => setEditDescription(e.target.value)}
-                                  onKeyDown={(e) => {
-                                    if (e.key === 'Enter') saveTask();
-                                    if (e.key === 'Escape') setEditingId(null);
-                                  }}
-                                  onClick={(e) => e.stopPropagation()}
-                                />
-                              ) : (
-                                task.description
-                              )}
-                            </td>
+                          <td className="td-desc" onClick={() => !isEditing && handleEditClick(task, 'desc')}>
+                            {isEditing ? (
+                              <input 
+                                ref={descInputRef} 
+                                value={editDescription} 
+                                onChange={(e) => setEditDescription(e.target.value)}
+                                onKeyDown={(e) => e.key === 'Enter' && saveTask()}
+                                onClick={(e) => e.stopPropagation()}
+                              />
+                            ) : (
+                              task.description
+                            )}
+                          </td>
 
-                            <td className="td-delete">
-                              <span 
-                                className="deleteIcon" 
-                                onClick={(e) => { 
-                                  e.stopPropagation(); 
-                                  deleteTask(task.id); 
-                                }}
-                              ></span>
-                            </td>
-                          </tr>
-                        )}
-                      </Draggable>
-                    );
-                  })}
-                  {provided.placeholder}
-                </tbody>
-              )}
-            </Droppable>
-          </table>
-        </>
+                          <td className="td-delete">
+                            <span 
+                              className="deleteIcon" 
+                              onClick={(e) => { 
+                                e.stopPropagation(); 
+                                deleteTask(task.id); 
+                              }}
+                            ></span>
+                          </td>
+                        </tr>
+                      )}
+                    </Draggable>
+                  );
+                })}
+                {provided.placeholder}
+              </tbody>
+            )}
+          </Droppable>
+        </table>
       )}
     </div>
   );

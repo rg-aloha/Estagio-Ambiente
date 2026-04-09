@@ -3,6 +3,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import TaskList from './components/TaskList';
 import { DragDropContext } from '@hello-pangea/dnd';
+import SortFilter from './components/SortFilter';
 
 function App() {
   const [tasks, setTasks] = useState([]);
@@ -144,6 +145,7 @@ function App() {
         </div>
 
         <header className="App-header">
+          <SortFilter currentFilter={filter} setFilter={setFilter} />
           <TaskList showInputs={false} {...sharedProps} />
         </header>
       </div>
